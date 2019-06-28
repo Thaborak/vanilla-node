@@ -1,0 +1,19 @@
+{
+  "name": "vanilla-node",
+  "version": "1.0.0",
+  "description": "vanilla node http get/post server",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "node index.js",
+    "lint": "eslint ."
+  },
+  "keywords": [
+    "no libraries",
+    "no frameworks",
+    "vanilla node",
+    "classic node"
+  ],
+  "author": "Tom Haborak",
+  "license": "ISC"
+}
