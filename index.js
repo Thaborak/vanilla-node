@@ -1,9 +1,9 @@
 'use strict'
 const https = require('https');
+const keepAliveAgent = new https.Agent({ keepAlive: true });
 
 //get url
 const options = new URL('https://interview.adpeai.com/api/v1/get-task');
-
 // options for POST request 
 const optionsPost = {
     hostname: 'interview.adpeai.com',
@@ -19,6 +19,7 @@ const optionsPost = {
 
 //============ POST function ===============
 const reqPost = https.request(optionsPost, function (res) {
+    console.log('statusCode:', res.statusCode);
     const chunks = [];
 
     res.on("data", function (chunk) {
@@ -27,8 +28,22 @@ const reqPost = https.request(optionsPost, function (res) {
 
     res.on("end", function () {
         const body = Buffer.concat(chunks);
-        console.log(body.toString());
+        // error code handing 
+        switch (res.statusCode) {
+            case 200:
+                console.log(body.toString());
+                break;
+            case 400:
+                console.log(body.toString());
+                break;
+            case 500:
+                console.log(body.toString());
+                break;
+        }
+        reqPost.end();
+
     });
+
 });
 
 
@@ -50,9 +65,8 @@ const req = https.get(options, function (res) {
                 answer.id = problem.id
                 answer.result = (problem.left / problem.right)
                 console.log(answer)
-                reqPost.write(JSON.stringify(answer));
+                reqPost.write(JSON.stringify(answer))
                 reqPost.end();
-                return answer
                 break;
             case 'addition':
                 answer.id = problem.id
@@ -60,7 +74,6 @@ const req = https.get(options, function (res) {
                 console.log(answer)
                 reqPost.write(JSON.stringify(answer));
                 reqPost.end();
-                return answer
                 break;
             case 'remainder':
                 answer.id = problem.id
@@ -68,7 +81,6 @@ const req = https.get(options, function (res) {
                 console.log(answer)
                 reqPost.write(JSON.stringify(answer));
                 reqPost.end();
-                return answer
                 break;
             case 'subtraction':
                 answer.id = problem.id
@@ -76,7 +88,6 @@ const req = https.get(options, function (res) {
                 console.log(answer)
                 reqPost.write(JSON.stringify(answer));
                 reqPost.end();
-                return answer
                 break;
             case 'multiplication':
                 answer.id = problem.id
@@ -84,25 +95,23 @@ const req = https.get(options, function (res) {
                 console.log(answer)
                 reqPost.write(JSON.stringify(answer));
                 reqPost.end();
-                return answer
                 break;
             default:
+                reqPost.end();
                 break;
         }
     })
 });
+
 
 const PORT = 8080;
 const server = https.createServer((request, response) => {
     req.on('error', function (e) {
         console.log('ERROR: ' + e.message);
     });
-    // Write data to request body
-    const postData = querystring.stringify({
-        'msg': 'Hello World!'
-    });
 
-    req.write(postData);
-    req.end();
 });
+
 server.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
+
+
