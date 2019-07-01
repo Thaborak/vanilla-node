@@ -29,7 +29,7 @@ describe('Environment', () => {
     });
 });
 
-describe('Basic Express setup', () => {
+describe('Basic setup', () => {
     describe('404 handler', () => {
         it('should respond with 404 when given a bad path', () => {
             return chai.request('https://interview.adpeai.com/api/v1/bad/path')
